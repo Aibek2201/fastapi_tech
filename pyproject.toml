@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "fastapi-tech"
+version = "0.1.0"
+description = ""
+authors = ["Aibek2201 <aibekalmabekuly@gmail.com>"]
+readme = "README.md"
+packages = [{include = "fastapi_tech"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.101.1"
+uvicorn = {extras = ["standard"], version = "^0.23.2"}
+pydantic = {extras = ["email"], version = "^2.2.0"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
