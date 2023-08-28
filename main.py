@@ -1,8 +1,8 @@
-import uuid
 from enum import Enum
 
 from fastapi import FastAPI, Path, Query, Body
-from pydantic import BaseModel, EmailStr
+
+import schemas
 
 app = FastAPI()
 
@@ -13,24 +13,22 @@ class UserFirstname(str, Enum):
     i = 'I'
 
 
-class User(BaseModel):
-    id: uuid.UUID = uuid.uuid4()
-    email: EmailStr
-    first_name: str = 'John'
-    last_name: str = 'Doe'
-
-
 @app.get('/calc/{num1}-{num2}')
 def hello(
     num1: int = Path(...),
     num2: int = Path(...),
-    num3: int = Query(None, deprecated=True)
+    num3: int = Query(None)
 ):
-    return {'Message': num1 + num2 }
+    return {'Message': num1 + num2 + num3}
 
 
-@app.post('/users/{name}', response_model=User, tags=['Users'], deprecated=True)
-async def bye(name: UserFirstname, user: User = Body(...)):
+@app.post('/users/{name}', tags=['users'])
+async def bye(
+        name: UserFirstname,
+        user: schemas.User = Body(..., alias='User')
+) -> schemas.User:
+    print(user.json())
+
     match name:
         case UserFirstname.aibek:
             print('Hello')
