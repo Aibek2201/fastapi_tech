@@ -1,8 +1,10 @@
 from enum import Enum
+from typing import Annotated
 
-from fastapi import FastAPI, Path, Query, Body
+from fastapi import FastAPI, Path, Query, Body, Header
 
 import schemas
+import constants
 
 app = FastAPI()
 
@@ -24,9 +26,10 @@ def hello(
 
 @app.post('/users/{name}', tags=['users'])
 async def bye(
+        locale: Annotated[constants.LocaleType, Header(..., alias='Accept-Language')],
         name: UserFirstname,
         user: schemas.User = Body(..., alias='User')
-) -> schemas.User:
+) -> dict:
     print(user.json())
 
     match name:
@@ -35,6 +38,6 @@ async def bye(
         case UserFirstname.a:
             print('Bye')
         case _:
-            print('------------')
-    user.first_name = name
-    return user
+            user.first_name = name
+
+    return {**user.dict(), 'locale': user}
